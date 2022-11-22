@@ -1,0 +1,22 @@
+{
+  "name": "cse264final",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node MinesweeperClient.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lnw223/cse264Final.git"
+  },
+  "author": "Lauren Workosky",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lnw223/cse264Final/issues"
+  },
+  "homepage": "https://github.com/lnw223/cse264Final#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
