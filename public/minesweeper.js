@@ -28,6 +28,7 @@
 
     $("#reset").on("click", function(){
         spots = new Object();
+        start = false;
         if($('#difficulty').val() == "easy"){
             xdim = 9;
             ydim = 9;
@@ -52,20 +53,23 @@
         let div = document.getElementById("table");
 
         for(let i = 0; i < xdim; i++){
-            
             let row = newGrid.insertRow(i);
             for(let j = 0; j < ydim; j++){
                 let cel = row.insertCell(j);
-                spots[(i*xdim)+j] = new Spot(((i*ydim)+j), i, j, 0, false, false);
-                cel.textContent = spots[(i*xdim)+j].val;
+                spots[(i*ydim)+j] = new Spot(((i*ydim)+j), i, j, 0, false, false);
+                if(spots[(i*ydim)+j].val == 0){
+                    cel.textContent = " ";
+                } else{
+                    cel.textContent = spots[(i*ydim)+j].val;
+                }
                 cel.id = ((i*ydim)+j);
                 cel.className = "spot";
-                cel.style.color = "red";
                 cel.addEventListener("click", function(){
                     if(!start){
+                        start = true;
                         setBoard(i,j);
+                        
                     } else {
-
                     }
                     /*if(cel.style.border == "2px solid white"){
                         if(selectedNum < 3){
@@ -96,17 +100,23 @@
         }
         div.appendChild(newGrid);
         newGrid.id = "grid";
-        newGrid.style.width = " "+(ydim*60)+"px"; 
+        newGrid.style.width = " "+(ydim*30)+"px"; 
+        newGrid.style.height = " "+(xdim*30)+"px"; 
     }
     
     function setBoard(x,y){
+        //alert("mines: "+mines);
         for(let i = 0; i < mines; i++){
             let xcoord = Math.floor(Math.random() * xdim);
             let ycoord = Math.floor(Math.random() * ydim);
+            //alert("x: "+xcoord+" y: "+ycoord+" index: "+((xcoord*ydim)+ycoord));
+            //alert(spots[((xcoord*ydim)+ycoord)].val);
             if(spots[((xcoord*ydim)+ycoord)].val != "X"){
+                
                 spots[((xcoord*ydim)+ycoord)].val = "X";
                 let cell = document.getElementById((xcoord*ydim)+ycoord);
                 cell.textContent = "X";
+                setCellColor((xcoord*ydim)+ycoord);
                 for(let j = 0; j < 8; j++){
                     let xcheck = xcoord + deltaX[j];
                     let ycheck = ycoord + deltaY[j];
@@ -118,9 +128,34 @@
                         let cellChange = document.getElementById((xcheck*ydim)+ycheck);
                         spots[((xcheck*ydim)+ycheck)].val += 1;
                         cellChange.textContent = spots[((xcheck*ydim)+ycheck)].val;
+                        setCellColor((xcheck*ydim)+ycheck);
                     }
                 } 
             }
+        }
+    }
+
+    function setCellColor(id){
+        let cell = document.getElementById(id);
+        cell.style.backgroundColor = "lightgrey";
+        if(cell.textContent == "X"){
+            cell.style.color = "red";
+        } else if (cell.textContent == "8"){
+            cell.style.color = "pink";
+        } else if (cell.textContent == "7"){
+            cell.style.color = "orange";
+        } else if (cell.textContent == "6"){
+            cell.style.color = "yellow";
+        } else if (cell.textContent == "5"){
+            cell.style.color = "green";
+        } else if (cell.textContent == "4"){
+            cell.style.color = "aquamarine";
+        } else if (cell.textContent == "3"){
+            cell.style.color = "blue";
+        } else if (cell.textContent == "2"){
+            cell.style.color = "purple";
+        } else if (cell.textContent == "1"){
+            cell.style.color = "brown";
         }
     }
 
