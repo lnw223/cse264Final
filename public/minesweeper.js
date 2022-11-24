@@ -104,7 +104,9 @@
     }
     
     function setBoard(x,y){
-        for(let i = 0; i < mines; i++){
+        let minesLeft = mines;
+        while(minesLeft > 0){
+       // for(let i = 0; i < mines; i++){
             let xcoord = Math.floor(Math.random() * xdim);
             let ycoord = Math.floor(Math.random() * ydim);
             if(spots[((xcoord*ydim)+ycoord)].val != "X"){//if spot is not already a mine
@@ -121,6 +123,7 @@
                         spots[((xcoord*ydim)+ycoord)].val = "X";
                         let cell = document.getElementById((xcoord*ydim)+ycoord);
                         cell.textContent = "X";
+                        minesLeft--;
                         setCellColor((xcoord*ydim)+ycoord);
                         for(let j = 0; j < 8; j++){//check surrounding spots
                             let xcheck = xcoord + deltaX[j];
@@ -140,6 +143,7 @@
                     
                 }
             }
+        
         }
     }
 
