@@ -68,7 +68,6 @@
                     if(!start){
                         start = true;
                         setBoard(i,j);
-                        
                     } else {
                     }
                     /*if(cel.style.border == "2px solid white"){
@@ -105,32 +104,41 @@
     }
     
     function setBoard(x,y){
-        //alert("mines: "+mines);
         for(let i = 0; i < mines; i++){
             let xcoord = Math.floor(Math.random() * xdim);
             let ycoord = Math.floor(Math.random() * ydim);
-            //alert("x: "+xcoord+" y: "+ycoord+" index: "+((xcoord*ydim)+ycoord));
-            //alert(spots[((xcoord*ydim)+ycoord)].val);
-            if(spots[((xcoord*ydim)+ycoord)].val != "X"){
-                
-                spots[((xcoord*ydim)+ycoord)].val = "X";
-                let cell = document.getElementById((xcoord*ydim)+ycoord);
-                cell.textContent = "X";
-                setCellColor((xcoord*ydim)+ycoord);
-                for(let j = 0; j < 8; j++){
-                    let xcheck = xcoord + deltaX[j];
-                    let ycheck = ycoord + deltaY[j];
-                    if((xcheck < 0) || (xcheck >= xdim) || (ycheck < 0) || (ycheck >= ydim)){
-                        continue;
-                    } else if (spots[((xcheck*ydim)+ycheck)].val == "X"){
-                        continue;
-                    } else {
-                        let cellChange = document.getElementById((xcheck*ydim)+ycheck);
-                        spots[((xcheck*ydim)+ycheck)].val += 1;
-                        cellChange.textContent = spots[((xcheck*ydim)+ycheck)].val;
-                        setCellColor((xcheck*ydim)+ycheck);
+            if(spots[((xcoord*ydim)+ycoord)].val != "X"){//if spot is not already a mine
+                if((xcoord != x) && (ycoord != y)){//if spot is not user selected spot
+                    let valid = true;
+                    for(let k = 0; k < 8; k++){//check if surrounding spots are not user spot
+                        let xspot = xcoord + deltaX[k];
+                        let yspot = ycoord + deltaY[k];
+                        if((xspot == x) && (yspot== y)){
+                            valid = false;
+                        }
                     }
-                } 
+                    if(valid){//if spot and surrounding spots are not user spot
+                        spots[((xcoord*ydim)+ycoord)].val = "X";
+                        let cell = document.getElementById((xcoord*ydim)+ycoord);
+                        cell.textContent = "X";
+                        setCellColor((xcoord*ydim)+ycoord);
+                        for(let j = 0; j < 8; j++){//check surrounding spots
+                            let xcheck = xcoord + deltaX[j];
+                            let ycheck = ycoord + deltaY[j];
+                            if((xcheck < 0) || (xcheck >= xdim) || (ycheck < 0) || (ycheck >= ydim)){//if spot doesnt exist
+                                continue;
+                            } else if (spots[((xcheck*ydim)+ycheck)].val == "X"){//if spot is already a mine
+                                continue;
+                            } else {
+                                let cellChange = document.getElementById((xcheck*ydim)+ycheck);
+                                spots[((xcheck*ydim)+ycheck)].val += 1;
+                                cellChange.textContent = spots[((xcheck*ydim)+ycheck)].val;
+                                setCellColor((xcheck*ydim)+ycheck);
+                            }
+                        } 
+                    }
+                    
+                }
             }
         }
     }
