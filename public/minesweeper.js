@@ -9,7 +9,8 @@
     let ydim = 0;
     let mines = 0;
     let start = false;
-    let log = "";
+    let gameover = false;
+    let flag = false;
 
     const deltaX = [0, 1, 1, 1, 0, -1, -1, -1];
     const deltaY = [1, 1, 0, -1, -1, -1, 0, 1];
@@ -30,6 +31,7 @@
     $("#reset").on("click", function(){
         spots = new Object();
         start = false;
+        gameover = false;
         if($('#difficulty').val() == "easy"){
             xdim = 9;
             ydim = 9;
@@ -43,10 +45,22 @@
             ydim = 30;
             mines = 99;
         }
-       // alert(""+xdim+"x"+ydim);
         makeGrid();
-
     });
+
+
+    $("#flag").on("click", function(){
+        if(start){
+            if(flag){
+                flag = false;
+                document.getElementById("flag").style.backgroundColor = "#f2f2f2";
+            } else {
+                flag = true;
+                document.getElementById("flag").style.backgroundColor = "red";
+            }
+        }
+    });
+
 
     function makeGrid(){
         let oldGrid = document.getElementById("grid");
@@ -66,34 +80,19 @@
                 cel.id = ((i*ydim)+j);
                 cel.className = "spot";
                 cel.addEventListener("click", function(){
-                    if(!start){
-                        start = true;
-                        setBoard(i,j);
-                        uncover(i,j);
-                    } else if ((spots[(i*ydim)+j].flagged == false) && (spots[(i*ydim)+j].uncovered == false)){
-                        uncover(i,j);
+                    if(!gameover){
+                        if(!start){
+                            start = true;
+                            setBoard(i,j);
+                            uncover(i,j);
+                        } else if (flag){
+                            if(spots[(i*ydim)+j].uncovered == false){
+                                flagSpot(i,j);
+                            }
+                        } else if ((spots[(i*ydim)+j].flagged == false) && (spots[(i*ydim)+j].uncovered == false)){
+                            uncover(i,j);
+                        }
                     }
-                    /*if(cel.style.border == "2px solid white"){
-                        if(selectedNum < 3){
-                            cel.style.border = "2px solid black";
-                            for(let k = 0; k < 3; k++){
-                                if(selectedImgs[k] == 0){
-                                    selectedImgs[k] = cardNums[(3*i)+j];
-                                    break;
-                                }//end if 
-                            }//end for 
-                            selectedNum++;
-                        }//end if 
-                    } else {
-                        cel.style.border = "2px solid white";
-                        for(let k = 0; k < 3; k++){
-                            if(selectedImgs[k] == cardNums[(3*i)+j]){
-                                selectedImgs[k] = 0;
-                                break;
-                            }//end if 
-                        }//end for 
-                        selectedNum--;
-                    }//end else */
                 });//end event listener 
             }
         }
@@ -106,6 +105,7 @@
         newGrid.style.height = " "+(xdim*30)+"px"; 
     }
 
+
     function uncover(x,y){
         let index = (x*ydim)+y;
         if(spots[index].uncovered == false){
@@ -113,23 +113,25 @@
             let cell = document.getElementById(index);
             cell.textContent = spots[index].val;
             setCellColor(index);
-            if(spots[index].val == 0){
-                cell.textContent = "";
-                for(let i = 0; i < 8; i++){
-                    let xspot = x + deltaX[i];
-                    let yspot = y + deltaY[i];
-                    if((xspot < 0) || (xspot >= xdim) || (yspot < 0) || (yspot >= ydim)){//if spot doesnt exist
-                        continue;
+            if(spots[index].val == "X"){
+                gameOver();
+            } else {
+                if(spots[index].val == 0){
+                    cell.textContent = "";
+                    for(let i = 0; i < 8; i++){
+                        let xspot = x + deltaX[i];
+                        let yspot = y + deltaY[i];
+                        if((xspot < 0) || (xspot >= xdim) || (yspot < 0) || (yspot >= ydim)){//if spot doesnt exist
+                            continue;
+                        }
+                        uncover(xspot, yspot);
                     }
-                    uncover(xspot, yspot);
                 }
-                
             }
-        
         }
-       
     }
     
+
     function setBoard(x,y){
         let minesLeft = mines;
         while(minesLeft > 0){
@@ -167,9 +169,10 @@
         }
     }
 
+
     function setCellColor(id){
         let cell = document.getElementById(id);
-        cell.style.backgroundColor = "lightgrey";
+        cell.style.backgroundColor = "#b3b3b3";
         if(cell.textContent == "X"){
             cell.style.color = "red";
         } else if (cell.textContent == "8"){
@@ -188,9 +191,30 @@
             cell.style.color = "purple";
         } else if (cell.textContent == "1"){
             cell.style.color = "brown";
-        } else if (cell.textContent == "0"){
-           /// cell.style.backgroundColor = "white";
+        } else if (cell.textContent == "▶"){
+           cell.style.backgroundColor = "#d9d9d9";
+           cell.style.color = "red";
+        } 
+    }
+
+
+    function flagSpot(x,y){
+        let index = (x*ydim)+y;
+        let cell = document.getElementById(index);
+        if(spots[index].flagged == true){
+            spots[index].flagged = false;
+            cell.textContent = " ";
+        } else {
+            spots[index].flagged = true;
+            cell.textContent = "▶";
+            setCellColor(index);
         }
+    }
+
+
+    function gameOver(){
+        gameover = true;
+        alert("Game Over!");
     }
 
 });
