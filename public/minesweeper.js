@@ -92,6 +92,7 @@
                         } else if ((spots[(i*ydim)+j].flagged == false) && (spots[(i*ydim)+j].uncovered == false)){
                             uncover(i,j);
                         }
+                        checkWin();
                     }
                 });//end event listener 
             }
@@ -174,7 +175,8 @@
         let cell = document.getElementById(id);
         cell.style.backgroundColor = "#b3b3b3";
         if(cell.textContent == "X"){
-            cell.style.color = "red";
+            cell.style.color = "black";
+            cell.style.backgroundColor = "red";
         } else if (cell.textContent == "8"){
             cell.style.color = "pink";
         } else if (cell.textContent == "7"){
@@ -208,6 +210,29 @@
             spots[index].flagged = true;
             cell.textContent = "▶";
             setCellColor(index);
+        }
+    }
+
+    function checkWin(){
+       // alert("check");
+        let win = true;
+        for(let x = 0; x < xdim; x++){
+            for(let y = 0; y < ydim; y++){
+                let index = (x*ydim)+y;
+                if(spots[index].val == "X"){
+                    if(spots[index].uncovered == true){
+                        win = false;
+                    }
+                } else {
+                    if(spots[index].uncovered == false){
+                        win = false;
+                    }
+                }
+            }
+        }
+        if(win){
+            alert("You Win!");
+            gameover = true;
         }
     }
 
