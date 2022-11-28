@@ -14,19 +14,22 @@
 </head>
 
 <body>
-  <script src="js/jquery-1.8.1.min.js"></script>
-  <!--<script src="js/socket.io.min.js"></script>
-  <script src="js/scripts.js"></script>-->
-  <script src="minesweeper.js"></script>
-  
-  Difficulty: <select name="difficulty" id="difficulty">
-    <option value="easy">Easy</option>
-    <option value="medium">Medium</option>
-    <option value="hard">Hard</option>
-  </select>
-  <input type="button" name="reset" id="reset" value="Reset"/>
-  <input type="button" name="flag" id="flag" value="Flag"/><br>
-  <div id="table"></div>
+  <div id="container">
+    <script src="js/jquery-1.8.1.min.js"></script>
+    <!--<script src="js/socket.io.min.js"></script>
+    <script src="js/scripts.js"></script>-->
+    <script src="minesweeper.js"></script>
+    
+    Difficulty: <select name="difficulty" id="difficulty">
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+    <input type="button" name="reset" id="reset" value="Reset"/>
+    <input type="button" name="flag" id="flag" value="Flag"/><br>
+    <div id="table"></div><br>
+    <div id="unflagged">Mines left:</div>
+  </div>
 </body>
 
 </html>

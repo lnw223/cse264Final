@@ -8,6 +8,7 @@
     let xdim = 0;
     let ydim = 0;
     let mines = 0;
+    let minesLeft = 0;
     let start = false;
     let gameover = false;
     let flag = false;
@@ -36,15 +37,20 @@
             xdim = 9;
             ydim = 9;
             mines = 10;
+            minesLeft = 10;
         } else if ($('#difficulty').val() == "medium"){
             xdim = 16;
             ydim = 16;
             mines = 40;
+            minesLeft = 40;
         } else {
             xdim = 16;
             ydim = 30;
             mines = 99;
+            minesLeft = 99;
         }
+        let leftover = document.getElementById("unflagged");
+        leftover.innerHTML = "Mines left: "+mines;
         makeGrid();
     });
 
@@ -56,7 +62,7 @@
                 document.getElementById("flag").style.backgroundColor = "#f2f2f2";
             } else {
                 flag = true;
-                document.getElementById("flag").style.backgroundColor = "red";
+                document.getElementById("flag").style.backgroundColor = "#ff00ae";
             }
         }
     });
@@ -173,10 +179,10 @@
 
     function setCellColor(id){
         let cell = document.getElementById(id);
-        cell.style.backgroundColor = "#b3b3b3";
+        cell.style.backgroundColor = "#ff99df";
         if(cell.textContent == "X"){
             cell.style.color = "black";
-            cell.style.backgroundColor = "red";
+            cell.style.backgroundColor = "#ff00ae";
         } else if (cell.textContent == "8"){
             cell.style.color = "pink";
         } else if (cell.textContent == "7"){
@@ -190,12 +196,12 @@
         } else if (cell.textContent == "3"){
             cell.style.color = "blue";
         } else if (cell.textContent == "2"){
-            cell.style.color = "purple";
+            cell.style.color = "blueviolet";
         } else if (cell.textContent == "1"){
-            cell.style.color = "brown";
+            cell.style.color = "aqua";
         } else if (cell.textContent == "▶"){
-           cell.style.backgroundColor = "#d9d9d9";
-           cell.style.color = "red";
+           cell.style.backgroundColor = "#ffccef";
+           cell.style.color = "#ff00ae";
         } 
     }
 
@@ -205,16 +211,19 @@
         let cell = document.getElementById(index);
         if(spots[index].flagged == true){
             spots[index].flagged = false;
+            minesLeft++;
             cell.textContent = " ";
         } else {
             spots[index].flagged = true;
+            minesLeft--;
             cell.textContent = "▶";
             setCellColor(index);
         }
+        let leftover = document.getElementById("unflagged");
+        leftover.innerHTML = "Mines left: "+minesLeft;
     }
 
     function checkWin(){
-       // alert("check");
         let win = true;
         for(let x = 0; x < xdim; x++){
             for(let y = 0; y < ydim; y++){
@@ -239,6 +248,17 @@
 
     function gameOver(){
         gameover = true;
+        for(let i = 0; i < xdim; i++){
+            for(let j = 0; j < ydim; j++){
+                let index = (i*ydim)+j;
+                if((spots[index].val == "X") && (spots[index].flagged == false)){
+                    spots[index].uncovered = true;
+                    let cell = document.getElementById(index);
+                    cell.textContent = "X";
+                    setCellColor(index);
+                }
+            }
+        }
         alert("Game Over!");
     }
 
